@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Twitter Bookmark Organizer",
+  "name": "TweetVault",
   "version": "1.0.0",
-  "description": "Organize your Twitter bookmarks with folders, tags, and powerful search - completely free!",
+  "description": "TweetVault: Organize your Twitter bookmarks with folders, tags, and powerful search - completely free!",
   "permissions": [
     "storage",
     "activeTab",

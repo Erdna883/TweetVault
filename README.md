@@ -1,4 +1,5 @@
-# Twitter Bookmark Organizer
+# TweetVault
+
 
 A free, open-source browser extension that lets you organize your Twitter/X bookmarks with folders, tags, and powerful search - no subscription required!
 
@@ -21,7 +22,8 @@ A free, open-source browser extension that lets you organize your Twitter/X book
 
 1. **Clone or download this repository**
    ```bash
-   cd "/Users/mimi/my startups/mini saas project/twitter bookmark organizer extension"
+   git clone https://github.com/Erdna883/TweetVault.git
+   cd TweetVault
    ```
 
 2. **Load in Chrome/Edge**

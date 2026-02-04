@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-EXT_NAME="twitter-bookmark-organizer"
+EXT_NAME="tweetvault"
 VERSION=$(grep '"version":' manifest.json | cut -d '"' -f 4)
 ZIP_NAME="${EXT_NAME}-v${VERSION}.zip"
 
