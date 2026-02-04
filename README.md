@@ -7,7 +7,9 @@ A free, open-source browser extension that lets you organize your Twitter/X book
 
 - 📁 **Folder Organization** - Create custom folders to organize your bookmarks
 - 🏷️ **Tag System** - Add tags to bookmarks for easy categorization
+- 🖱️ **Drag & Drop** - Moving bookmarks to folders is as easy as dragging them
 - 🖥️ **Full Dashboard** - Manage your library in a beautiful, full-screen interface
+- ✏️ **Edit & Note** - Add personal notes and update tags via the Edit Modal
 - 🖱️ **Manual Selection** - Save individual tweets to folders as you browse
 - 🎯 **Smart Sync** - Filter by keywords (e.g., "AI", "Crypto") during sync
 - 🔍 **Powerful Search** - Search bookmarks by content, author, tags, or notes
@@ -30,7 +32,7 @@ A free, open-source browser extension that lets you organize your Twitter/X book
    - Open `chrome://extensions/`
    - Enable "Developer mode" (toggle in top right)
    - Click "Load unpacked"
-   - Select the extension directory
+   - Select the `TweetVault` directory
 
 3. **Load in Firefox**
    - Open `about:debugging#/runtime/this-firefox`
@@ -47,30 +49,29 @@ A free, open-source browser extension that lets you organize your Twitter/X book
 4. Click the "Sync to Organizer" button in the header (or use the popup)
 5. Wait for the sync to complete - all your bookmarks will be saved locally!
 
-### 2. Organize with Folders
+### 2. Organize with Folders & Drag-Drop
 
-- Click "New Folder" in the sidebar to create a folder
-- Rename folders by clicking the edit icon
-- Delete folders (bookmarks will move to "Uncategorized")
-- View folder contents by clicking on a folder name
+- **Create Folders**: Click "New Folder" in the sidebar
+- **Drag & Drop**: Drag any bookmark card from the grid onto a folder in the sidebar to move it
+- **Edit**: Click the "Edit" (pencil) icon on any bookmark to add Notes or Tags
+- **Delete**: Remove bookmarks (moves to Trash/deleted from Extension only)
 
 ### 3. Search & Filter
 
 - Use the search bar in the sidebar to find bookmarks instantly
 - Search by tweet content, author, tags, or your personal notes
-- Results update in real-time as you type
+- **Shortcuts**: Press `/` or `Cmd+K` to focus search instantly
 
 ### 4. Export Your Data
 
-- Click the extension icon → "Export Data"
-- Choose JSON format for backup or CSV for spreadsheets
-- Your data is yours - export anytime, no restrictions!
+- Click "Settings" (Gear Icon) in the Dashboard sidebar
+- Choose Export JSON (Backup) or CSV
+- Your data is yours - export anytime!
 
 ### 5. Import Data
 
-- Click the extension icon → "Import Data"
+- Click "Settings" -> "Import Data"
 - Select a previously exported JSON file
-- All bookmarks, folders, and tags will be restored
 
 ## 🧠 For Pros: Efficient Workflows
 
@@ -134,9 +135,9 @@ twitter-bookmark-organizer-extension/
 - **Open Source** - Inspect the code to see exactly what it does
 - **Your Data** - Export anytime in standard formats (JSON, CSV)
 
-## 🆚 Why This Extension?
+## 🆚 Why TweetVault?
 
-| Feature | This Extension | Dewey (Paid) | Twitter Native |
+| Feature | TweetVault | Dewey (Paid) | Twitter Native |
 |---------|---------------|--------------|----------------|
 | Folders | ✅ Free | ✅ $90/year | ❌ $8/month |
 | Tags | ✅ Free | ✅ $90/year | ❌ |
@@ -154,28 +155,39 @@ twitter-bookmark-organizer-extension/
 - **Vanilla JS** - No frameworks, pure JavaScript
 - **Modern CSS** - CSS variables, dark theme, animations
 
+### Architecture
+
+```
+TweetVault/
+├── manifest.json          # Extension configuration
+├── background.js          # Service worker (message handling, storage)
+├── storage.js            # IndexedDB wrapper
+├── content.js            # Twitter page integration
+├── dashboard/            # Dashboard App (Vue-like without framework)
+│   ├── dashboard.html
+│   ├── dashboard.css
+│   └── dashboard.js
+├── popup/                # Extension popup UI
+├── sidebar/              # Sidebar injected into Twitter
+├── styles/               # Shared styles
+└── icons/                # Extension icons
+```
+
 ### Project Status
 
-**Phase 1 (MVP)** ✅ - Core functionality complete
-- [x] Extension setup and manifest
-- [x] IndexedDB storage layer
-- [x] Bookmark scraper
-- [x] Folder organization
-- [x] Basic popup UI
-- [x] Sidebar integration
+**V1.0 - Feature Complete** ✅
+- [x] Full Dashboard & Sidebar
+- [x] Drag & Drop Organization
+- [x] Edit Modal (Tags, Notes)
+- [x] Search & Filter
+- [x] Export/Import
+- [x] Keyboard Shortcuts
 
-**Phase 2 (Enhancements)** ✅ - Feature complete!
-- [x] **Full Dashboard** interface
-- [x] **Manual Selection** (Save buttons on tweets)
-- [x] **Keyword-based Sync** (Smart filtering)
-- [x] Jump to bottom optimization
-- [x] Search filters
+**Future Roadmap (Startup Phase)** 🚀
+- [ ] AI Auto-Tagging
+- [ ] Cloud Sync
+- [ ] Content Studio
 
-**Phase 3 (Polish)** 🚧 - In Progress
-- [ ] Keyboard shortcuts
-- [ ] Settings page
-- [ ] Light theme option
-- [ ] Browser sync (Chrome Sync API)
 
 ## 🤝 Contributing
 
