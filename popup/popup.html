@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter Bookmark Organizer</title>
+  <link rel="stylesheet" href="../styles/global.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="flex items-center gap-md">
+        <img src="../icons/icon48.png" alt="Logo" class="logo">
+        <div>
+          <h1 class="popup-title">Bookmark Organizer</h1>
+          <p class="popup-subtitle text-secondary text-sm">Organize your Twitter bookmarks</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="totalBookmarks">0</div>
+        <div class="stat-label">Bookmarks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalFolders">0</div>
+        <div class="stat-label">Folders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalTags">0</div>
+        <div class="stat-label">Tags</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-section">
+      <h2 class="section-title">Quick Actions</h2>
+      <div class="actions-grid">
+        <button class="action-btn" id="syncBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+          </svg>
+          Sync Bookmarks
+        </button>
+        <button class="action-btn" id="exportBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+          </svg>
+          Export Data
+        </button>
+        <button class="action-btn" id="importBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+          </svg>
+          Import Data
+        </button>
+        <button class="action-btn" id="openDashboardBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          Open Dashboard
+        </button>
+        <button class="action-btn" id="openManagerBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+            </path>
+          </svg>
+          Open Twitter
+        </button>
+      </div>
+    </div>
+
+    <!-- Recent Bookmarks -->
+    <div class="recent-section">
+      <h2 class="section-title">Recent Bookmarks</h2>
+      <div id="recentBookmarks" class="recent-list">
+        <!-- Will be populated by JS -->
+        <div class="empty-state">
+          <p class="text-secondary text-sm">No bookmarks yet</p>
+          <p class="text-muted text-xs">Go to Twitter and sync your bookmarks to get started</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status/Loading indicator -->
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
+  </div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="importFileInput" accept=".json" style="display: none;">
+
+  <script src="popup.js"></script>
+</body>
+
+</html>

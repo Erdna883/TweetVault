@@ -1,0 +1,207 @@
+/* Tweet Save Button */
+.tweet-save-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: var(--text-secondary, #71767B);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.tweet-save-btn:hover {
+    background: rgba(29, 161, 242, 0.1);
+    color: var(--primary, #1DA1F2);
+}
+
+.tweet-save-btn svg {
+    pointer-events: none;
+}
+
+/* Folder Selection Modal */
+.folder-selection-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100001;
+    animation: modalFadeIn 0.2s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.folder-selection-modal .modal-content {
+    background: var(--bg-secondary, #192734);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: scale(0.9) translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.folder-selection-modal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color, #38444D);
+    background: var(--bg-primary, #15202B);
+}
+
+.folder-selection-modal .modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary, #FFFFFF);
+}
+
+.folder-selection-modal .modal-close {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary, #8B98A5);
+    font-size: 28px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.folder-selection-modal .modal-close:hover {
+    background: var(--bg-hover, #273340);
+    color: var(--text-primary, #FFFFFF);
+}
+
+.folder-selection-modal .modal-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+}
+
+.folder-selection-modal .tweet-preview {
+    background: var(--bg-primary, #15202B);
+    border: 1px solid var(--border-color, #38444D);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.folder-selection-modal .tweet-author {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary, #1DA1F2);
+    margin-bottom: 8px;
+}
+
+.folder-selection-modal .tweet-text {
+    font-size: 14px;
+    color: var(--text-primary, #FFFFFF);
+    line-height: 1.5;
+}
+
+.folder-selection-modal .folder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.folder-selection-modal .folder-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-primary, #15202B);
+    border: 1px solid var(--border-color, #38444D);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.folder-selection-modal .folder-item:hover {
+    background: var(--bg-hover, #273340);
+    border-color: var(--primary, #1DA1F2);
+    transform: translateX(4px);
+}
+
+.folder-selection-modal .folder-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.folder-selection-modal .folder-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary, #FFFFFF);
+}
+
+.folder-selection-modal .no-folders {
+    text-align: center;
+    color: var(--text-secondary, #8B98A5);
+    padding: 20px;
+    font-size: 14px;
+}
+
+.folder-selection-modal .create-new-folder-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--primary, #1DA1F2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.folder-selection-modal .create-new-folder-btn:hover {
+    background: var(--primary-hover, #1A91DA);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
+}
+
+.folder-selection-modal .create-new-folder-btn svg {
+    flex-shrink: 0;
+}

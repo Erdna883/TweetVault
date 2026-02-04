@@ -1,0 +1,19 @@
+# System Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Dependencies
+node_modules/
+
+# Build/Release
+*.zip
+*.crx
+*.pem
+
+# Logs
+*.log
+
+# Temp
+tmp/

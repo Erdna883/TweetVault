@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Bookmark Organizer Dashboard</title>
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                    </svg>
+                </div>
+                <h1>Organizer</h1>
+            </div>
+
+            <nav class="main-nav">
+                <a href="#" class="nav-item active" data-view="all">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    All Bookmarks
+                </a>
+                <a href="#" class="nav-item" data-view="favorites">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                    Favorites
+                </a>
+                <a href="#" class="nav-item" data-view="unsorted">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Unsorted
+                </a>
+            </nav>
+
+            <div class="section-divider"></div>
+
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <h2>Folders</h2>
+                    <button class="add-btn" id="addFolderBtn" title="Create Folder">+</button>
+                </div>
+                <div class="folders-list" id="foldersList">
+                    <!-- Folders injected via JS -->
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="sidebar-section">
+                <div class="section-header">
+                    <h2>Tags</h2>
+                </div>
+                <div class="tags-list" id="tagsList">
+                    <!-- Tags injected via JS -->
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="settings-btn" id="settingsBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
+                    </svg>
+                    Settings
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-container">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search bookmarks, authors, tags...">
+                </div>
+                <div class="top-actions">
+                    <div class="view-toggle">
+                        <button class="toggle-btn active" data-layout="grid" title="Grid View">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </button>
+                        <button class="toggle-btn" data-layout="list" title="List View">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="primary-btn" id="syncBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+                        </svg>
+                        Sync
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <span>All Bookmarks</span>
+                    <span class="count" id="itemCount">0 items</span>
+                </div>
+
+                <div class="bookmarks-grid" id="bookmarksGrid">
+                    <!-- Bookmarks injected via JS -->
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading your library...</p>
+                    </div>
+                </div>
+
+                <div class="empty-state hidden" id="emptyState">
+                    <div class="empty-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                        </svg>
+                    </div>
+                    <h3>No bookmarks found</h3>
+                    <p>Try syncing your Twitter bookmarks or adjust your search.</p>
+                    <button class="secondary-btn" id="emptySyncBtn">Go to Twitter to Sync</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Init IndexedDB before dashboard logic matches storage.js class usage -->
+    <!-- Edit Bookmark Modal -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Bookmark</h2>
+                <button class="close-btn" id="closeEditBtn">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editBookmarkId">
+
+                    <div class="setting-group">
+                        <label for="editNotes">Notes</label>
+                        <textarea id="editNotes" placeholder="Add personal notes, thoughts, or summary..."
+                            rows="4"></textarea>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="editFolder">Folder</label>
+                        <select id="editFolder">
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="editTags">Tags</label>
+                        <div class="tag-input-container">
+                            <div id="activeTags" class="active-tags">
+                                <!-- Tag chips go here -->
+                            </div>
+                            <input type="text" id="tagInput" placeholder="Type tag and press Enter...">
+                        </div>
+                    </div>
+
+                    <div class="setting-actions right-align">
+                        <button type="button" class="secondary-btn" id="cancelEditBtn">Cancel</button>
+                        <button type="submit" class="primary-btn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" id="closeSettingsBtn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <h3>Data Management</h3>
+                    <div class="setting-actions">
+                        <button class="secondary-btn" id="exportDataBtn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                            </svg>
+                            Export Data (JSON)
+                        </button>
+                        <button class="secondary-btn" id="importDataBtn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                            </svg>
+                            Import Data
+                        </button>
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="setting-group danger-zone">
+                    <h3>Danger Zone</h3>
+                    <p>Permanently delete all bookmarks and folders.</p>
+                    <button class="danger-btn" id="clearDataBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg>
+                        Reset Database
+                    </button>
+                </div>
+
+                <div class="setting-info">
+                    <p>Twitter Bookmark Organizer v1.0.0</p>
+                    <p>Open Source • Local Storage • Privacy First</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../storage.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
