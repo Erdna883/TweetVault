@@ -1205,17 +1205,43 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
      */
     function extractTweetData(tweetElement) {
         try {
+            // Text is optional (some tweets are image/video only)
             const textEl = tweetElement.querySelector('[data-testid="tweetText"]');
+            const content = textEl ? textEl.innerText : '';
+
+            // Multiple fallback strategies for author
+            let author = 'unknown';
             const authorEl = tweetElement.querySelector('[data-testid="User-Name"] a');
-            const timeEl = tweetElement.querySelector('time');
+            if (authorEl) {
+                const authorHref = authorEl.getAttribute('href');
+                author = authorHref ? authorHref.replace('/', '') : 'unknown';
+            } else {
+                // Fallback: try to find any link to a user profile
+                const profileLink = tweetElement.querySelector('a[href^="/"][role="link"]');
+                if (profileLink) {
+                    const href = profileLink.getAttribute('href');
+                    if (href && href.match(/^\/[a-zA-Z0-9_]+$/)) {
+                        author = href.replace('/', '');
+                    }
+                }
+            }
 
-            if (!textEl || !authorEl) return null;
-
-            const content = textEl.innerText;
-            const authorHref = authorEl.getAttribute('href');
-            const author = authorHref ? authorHref.replace('/', '') : 'unknown';
-            const url = tweetElement.querySelector('a[href*="/status/"]')?.href || '';
+            // Get tweet URL and ID
+            const statusLink = tweetElement.querySelector('a[href*="/status/"]');
+            const url = statusLink?.href || '';
             const tweetId = url.match(/status\/(\d+)/)?.[1] || '';
+
+            // If we have no tweetId and no content, we can't save this
+            if (!tweetId && !content) {
+                console.warn('TweetVault: Could not find tweet ID or content');
+                return null;
+            }
+
+            // Generate a fallback ID if needed
+            const finalTweetId = tweetId || `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+            // Get timestamp
+            const timeEl = tweetElement.querySelector('time');
             const createdAt = timeEl ? new Date(timeEl.getAttribute('datetime')).getTime() : Date.now();
 
             // Extract media URLs
@@ -1228,10 +1254,22 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 });
             });
 
+            // Also try to get video thumbnails
+            const videos = tweetElement.querySelectorAll('video');
+            videos.forEach(video => {
+                const poster = video.getAttribute('poster');
+                if (poster) {
+                    media.push({
+                        type: 'video',
+                        url: poster
+                    });
+                }
+            });
+
             return {
-                tweetId,
+                tweetId: finalTweetId,
                 author,
-                content,
+                content: content || '[Media Only]',
                 url,
                 createdAt,
                 media,
@@ -1239,7 +1277,7 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 notes: ''
             };
         } catch (error) {
-            console.error('Failed to extract tweet data:', error);
+            console.error('TweetVault: Failed to extract tweet data:', error);
             return null;
         }
     }
