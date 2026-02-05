@@ -807,3 +807,140 @@ textarea {
     font-weight: 700;
     cursor: pointer;
 }
+
+/* Tweet Detail Modal */
+.modal-large {
+    max-width: 700px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-large .modal-body {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.tweet-author-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.tweet-author-header .author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), #7b2ff7);
+}
+
+.tweet-author-header .author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.tweet-author-header .author-name {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text-main);
+}
+
+.tweet-author-header .tweet-date {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.tweet-full-content {
+    font-size: 17px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--text-main);
+    margin-bottom: 20px;
+}
+
+.tweet-media-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.tweet-media-gallery:empty {
+    display: none;
+}
+
+.tweet-media-gallery img {
+    width: 100%;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.tweet-media-gallery img:hover {
+    transform: scale(1.02);
+}
+
+.tweet-meta {
+    background: var(--bg-app);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.meta-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.meta-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    min-width: 60px;
+}
+
+.meta-value {
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.meta-tags .tag-chip {
+    font-size: 12px;
+    padding: 2px 8px;
+}
+
+.meta-notes {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-main);
+    font-style: italic;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--bg-app);
+}
+
+.modal-footer .secondary-btn {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}

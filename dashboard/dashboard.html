@@ -203,6 +203,65 @@
         </div>
     </div>
 
+    <!-- Tweet Detail Modal -->
+    <div id="tweetDetailModal" class="modal hidden">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <div class="tweet-author-header">
+                    <div class="author-avatar" id="detailAvatar"></div>
+                    <div class="author-info">
+                        <span class="author-name" id="detailAuthorName">@author</span>
+                        <span class="tweet-date" id="detailDate"></span>
+                    </div>
+                </div>
+                <button class="close-btn" id="closeDetailBtn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tweet-full-content" id="detailContent">
+                    <!-- Full tweet content -->
+                </div>
+
+                <div class="tweet-media-gallery" id="detailMedia">
+                    <!-- Media images/videos -->
+                </div>
+
+                <div class="tweet-meta" id="detailMeta">
+                    <div class="meta-item">
+                        <span class="meta-label">Folder:</span>
+                        <span class="meta-value" id="detailFolder">Uncategorized</span>
+                    </div>
+                    <div class="meta-item" id="detailTagsContainer">
+                        <span class="meta-label">Tags:</span>
+                        <div class="meta-tags" id="detailTags">
+                            <!-- Tags -->
+                        </div>
+                    </div>
+                    <div class="meta-item" id="detailNotesContainer">
+                        <span class="meta-label">Notes:</span>
+                        <p class="meta-notes" id="detailNotes"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn" id="editFromDetailBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Edit
+                </button>
+                <a href="#" class="secondary-btn" id="openTwitterBtn" target="_blank">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    Open on Twitter
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal hidden">
         <div class="modal-content">

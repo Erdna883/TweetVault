@@ -48,7 +48,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         activeTags: document.getElementById('activeTags'),
         tagInput: document.getElementById('tagInput'),
         closeEditBtn: document.getElementById('closeEditBtn'),
-        cancelEditBtn: document.getElementById('cancelEditBtn')
+        cancelEditBtn: document.getElementById('cancelEditBtn'),
+        // Tweet Detail Modal Elements
+        tweetDetailModal: document.getElementById('tweetDetailModal'),
+        closeDetailBtn: document.getElementById('closeDetailBtn'),
+        detailAuthorName: document.getElementById('detailAuthorName'),
+        detailDate: document.getElementById('detailDate'),
+        detailContent: document.getElementById('detailContent'),
+        detailMedia: document.getElementById('detailMedia'),
+        detailFolder: document.getElementById('detailFolder'),
+        detailTags: document.getElementById('detailTags'),
+        detailTagsContainer: document.getElementById('detailTagsContainer'),
+        detailNotes: document.getElementById('detailNotes'),
+        detailNotesContainer: document.getElementById('detailNotesContainer'),
+        editFromDetailBtn: document.getElementById('editFromDetailBtn'),
+        openTwitterBtn: document.getElementById('openTwitterBtn')
     };
 
     // Initialize
@@ -279,6 +293,76 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.editModal.classList.remove('hidden');
     }
 
+    function openDetailModal(bookmark) {
+        // Populate author and date
+        elements.detailAuthorName.textContent = `@${bookmark.author}`;
+        elements.detailDate.textContent = new Date(bookmark.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // Full content
+        elements.detailContent.textContent = bookmark.content;
+
+        // Media gallery
+        if (bookmark.media && bookmark.media.length > 0) {
+            elements.detailMedia.innerHTML = bookmark.media.map(m => `
+                <img src="${m.url}" alt="Tweet media" onclick="window.open('${m.url}', '_blank')">
+            `).join('');
+        } else {
+            elements.detailMedia.innerHTML = '';
+        }
+
+        // Folder name
+        const folder = state.folders.find(f => f.id === bookmark.folderId);
+        elements.detailFolder.textContent = folder ? folder.name : 'Uncategorized';
+
+        // Tags
+        if (bookmark.tags && bookmark.tags.length > 0) {
+            elements.detailTags.innerHTML = bookmark.tags.map(tag => `
+                <span class="tag-chip">#${tag}</span>
+            `).join('');
+            elements.detailTagsContainer.style.display = 'flex';
+        } else {
+            elements.detailTagsContainer.style.display = 'none';
+        }
+
+        // Notes
+        if (bookmark.notes) {
+            elements.detailNotes.textContent = bookmark.notes;
+            elements.detailNotesContainer.style.display = 'flex';
+        } else {
+            elements.detailNotesContainer.style.display = 'none';
+        }
+
+        // Set Twitter link
+        elements.openTwitterBtn.href = bookmark.url || `https://twitter.com/i/status/${bookmark.tweetId}`;
+
+        // Edit button
+        elements.editFromDetailBtn.onclick = () => {
+            elements.tweetDetailModal.classList.add('hidden');
+            openEditModal(bookmark);
+        };
+
+        // Close button
+        elements.closeDetailBtn.onclick = () => {
+            elements.tweetDetailModal.classList.add('hidden');
+        };
+
+        // Click outside to close
+        elements.tweetDetailModal.onclick = (e) => {
+            if (e.target === elements.tweetDetailModal) {
+                elements.tweetDetailModal.classList.add('hidden');
+            }
+        };
+
+        // Show modal
+        elements.tweetDetailModal.classList.remove('hidden');
+    }
+
     function updateBreadcrumbs(title) {
         elements.breadcrumbs.textContent = title;
     }
@@ -393,6 +477,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.key === 'Escape') {
             elements.settingsModal.classList.add('hidden');
             elements.editModal.classList.add('hidden');
+            elements.tweetDetailModal.classList.add('hidden');
         }
     });
 
@@ -444,7 +529,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const div = document.createElement('div');
         div.className = 'bookmark-card';
         div.draggable = true; // Make draggable
-        div.onclick = () => window.open(bookmark.url || `https://twitter.com/i/status/${bookmark.tweetId}`, '_blank');
+        div.onclick = () => openDetailModal(bookmark);
 
         // Drag Start
         div.addEventListener('dragstart', (e) => {
