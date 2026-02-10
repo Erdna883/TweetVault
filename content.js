@@ -641,11 +641,11 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                     const cardLinks = cardWrapper.querySelectorAll('a');
                     for (const link of cardLinks) {
                         const href = link.href || '';
-                        // Skip hashtags, mentions, and simple profile links
-                        if (href &&
-                            !href.includes('/hashtag/') &&
-                            !href.match(/^https?:\/\/(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?$/)) {
+                        // Skip hashtags, mentions, and simple profile links (e.g. x.com/username)
+                        // BUT allow status links (Quote Tweets) -> x.com/username/status/123
+                        const isProfileLink = href.match(/^https?:\/\/(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?$/);
 
+                        if (href && !href.includes('/hashtag/') && !isProfileLink) {
                             articleUrl = href;
                             isArticle = true;
 
@@ -701,16 +701,18 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 }
             }
 
-            // Strategy 4: Detect by content pattern - if tweet contains a URL card
-            // that isn't just an image
+            // Strategy 4: Fallback for any card that isn't just a basic image
             if (!isArticle && !cardWrapper) {
-                // Some cards use [data-testid="tweetPhoto"] for images but other structures for articles
-                const hasPhoto = tweetElement.querySelector('[data-testid="tweetPhoto"]');
-                const hasCard = tweetElement.querySelector('[data-card-name], [data-testid*="card"]');
-                if (hasCard && !hasPhoto) {
+                // Check for explicit card components
+                const hasCardComponent = tweetElement.querySelector('[data-testid*="card.layout"]');
+                if (hasCardComponent) {
                     isArticle = true;
-                    const cardLink = hasCard.querySelector('a');
+                    const cardLink = hasCardComponent.querySelector('a');
                     if (cardLink) articleUrl = cardLink.href || '';
+
+                    // Try to extract title
+                    const titleEl = hasCardComponent.querySelector('[dir]');
+                    if (titleEl) articleTitle = titleEl.innerText || '';
                 }
             }
 
