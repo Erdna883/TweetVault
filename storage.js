@@ -68,7 +68,7 @@ class BookmarkStorage {
   async saveBookmark(bookmark) {
     const transaction = this.db.transaction(['bookmarks'], 'readwrite');
     const store = transaction.objectStore('bookmarks');
-    
+
     const bookmarkData = {
       id: bookmark.id || this.generateId(),
       tweetId: bookmark.tweetId,
@@ -79,7 +79,10 @@ class BookmarkStorage {
       media: bookmark.media || [],
       folderId: bookmark.folderId || 'default',
       tags: bookmark.tags || [],
-      notes: bookmark.notes || ''
+      notes: bookmark.notes || '',
+      isArticle: bookmark.isArticle || false,
+      articleTitle: bookmark.articleTitle || '',
+      articleUrl: bookmark.articleUrl || ''
     };
 
     return new Promise((resolve, reject) => {
