@@ -599,6 +599,123 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
             }, scrollInterval);
         });
     }
+    /**
+     * Detect if a tweet element contains an article, note, or link card.
+     * Uses multiple detection strategies for broad compatibility with Twitter/X DOM changes.
+     */
+    function detectArticleContent(tweetElement) {
+        let isArticle = false;
+        let articleTitle = '';
+        let articleUrl = '';
+
+        try {
+            // Strategy 1: Look for card.wrapper (Twitter's card container)
+            const cardWrapper = tweetElement.querySelector('[data-testid="card.wrapper"]');
+            if (cardWrapper) {
+                // Strategy 1a: Direct article links
+                const articleLink = cardWrapper.querySelector(
+                    'a[href*="/article"], a[href*="/articles/"], a[href*="/i/article"]'
+                );
+                if (articleLink) {
+                    isArticle = true;
+                    articleUrl = articleLink.href || '';
+                }
+
+                // Strategy 1b: Card layout detail text (headline)
+                const headlineSelectors = [
+                    '[data-testid="card.layoutLarge.detail"] span',
+                    '[data-testid="card.layoutSmall.detail"] span',
+                    '[data-testid="card.layoutLarge.detail"] [dir]',
+                    '[data-testid="card.layoutSmall.detail"] [dir]'
+                ];
+                for (const selector of headlineSelectors) {
+                    const el = cardWrapper.querySelector(selector);
+                    if (el && el.innerText && el.innerText.trim().length > 0) {
+                        articleTitle = el.innerText.trim();
+                        break;
+                    }
+                }
+
+                // Strategy 1c: Any link inside the card with a title/text
+                if (!isArticle && cardWrapper.querySelector('a[role="link"]')) {
+                    const cardLinks = cardWrapper.querySelectorAll('a[role="link"]');
+                    for (const link of cardLinks) {
+                        const href = link.href || '';
+                        // Skip twitter.com profile links, only capture external or article URLs
+                        if (href && !href.match(/^https?:\/\/(twitter\.com|x\.com)\/?[a-zA-Z0-9_]*\/?$/)) {
+                            articleUrl = href;
+                            isArticle = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Strategy 1d: Look for domain/source text in card (usually shows like "nytimes.com")
+                if (!articleTitle) {
+                    const detailSpans = cardWrapper.querySelectorAll('span');
+                    for (const span of detailSpans) {
+                        const text = span.innerText?.trim() || '';
+                        // If it looks like an article title (more than 10 chars, not a domain)
+                        if (text.length > 10 && !text.includes('http') && !text.match(/^[a-z0-9.-]+\.[a-z]{2,}$/i)) {
+                            articleTitle = text;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Strategy 2: Look for Twitter Notes (different from Articles)
+            const noteLink = tweetElement.querySelector('a[href*="/notes/"], a[href*="/i/notes/"]');
+            if (noteLink) {
+                isArticle = true;
+                articleUrl = noteLink.href || articleUrl;
+                if (!articleTitle) {
+                    // Notes often have a title in a nearby span or heading element
+                    const parent = noteLink.closest('[data-testid="card.wrapper"]') || noteLink.parentElement;
+                    if (parent) {
+                        const titleEl = parent.querySelector('span[dir], [role="heading"]');
+                        if (titleEl) articleTitle = titleEl.innerText?.trim() || '';
+                    }
+                }
+            }
+
+            // Strategy 3: Look for external link embeds (t.co links that expand to article previews)
+            if (!isArticle) {
+                const tcoLinks = tweetElement.querySelectorAll('a[href*="t.co"]');
+                for (const link of tcoLinks) {
+                    // Check if the link has a card-like parent (not just a text link)
+                    const cardParent = link.closest('[data-testid="card.wrapper"]');
+                    if (cardParent) {
+                        isArticle = true;
+                        articleUrl = link.href || '';
+                        break;
+                    }
+                }
+            }
+
+            // Strategy 4: Detect by content pattern - if tweet contains a URL card
+            // that isn't just an image
+            if (!isArticle && !cardWrapper) {
+                // Some cards use [data-testid="tweetPhoto"] for images but other structures for articles
+                const hasPhoto = tweetElement.querySelector('[data-testid="tweetPhoto"]');
+                const hasCard = tweetElement.querySelector('[data-card-name], [data-testid*="card"]');
+                if (hasCard && !hasPhoto) {
+                    isArticle = true;
+                    const cardLink = hasCard.querySelector('a');
+                    if (cardLink) articleUrl = cardLink.href || '';
+                }
+            }
+
+            if (isArticle) {
+                console.log('TweetVault: Article detected!', { articleTitle, articleUrl });
+            }
+
+        } catch (error) {
+            console.error('TweetVault: Article detection error:', error);
+        }
+
+        return { isArticle, articleTitle, articleUrl };
+    }
 
     /**
      * Extract bookmarks from the Twitter page DOM
@@ -634,31 +751,10 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 });
 
                 // Detect Twitter Articles / embedded cards
-                let isArticle = false;
-                let articleTitle = '';
-                let articleUrl = '';
-                const cardWrapper = tweetEl.querySelector('[data-testid="card.wrapper"]');
-                if (cardWrapper) {
-                    // Look for article-style cards
-                    const cardLink = cardWrapper.querySelector('a[href*="/article"], a[href*="/articles"]');
-                    if (cardLink) {
-                        isArticle = true;
-                        articleUrl = cardLink.href || '';
-                    }
-                    // Also detect by card layout text (headline)
-                    const cardHeadline = cardWrapper.querySelector('[data-testid="card.layoutLarge.detail"] span, [data-testid="card.layoutSmall.detail"] span');
-                    if (cardHeadline) {
-                        articleTitle = cardHeadline.innerText || '';
-                        // If we have a headline in a card, it's likely an article or link card
-                        if (!isArticle && articleTitle.length > 0) {
-                            const anyLink = cardWrapper.querySelector('a[role="link"]');
-                            if (anyLink) {
-                                articleUrl = anyLink.href || '';
-                                isArticle = true;
-                            }
-                        }
-                    }
-                }
+                const articleInfo = detectArticleContent(tweetEl);
+                const isArticle = articleInfo.isArticle;
+                const articleTitle = articleInfo.articleTitle;
+                const articleUrl = articleInfo.articleUrl;
 
                 if (tweetId) {
                     bookmarks.push({
@@ -1297,28 +1393,10 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
             });
 
             // Detect Twitter Articles / embedded cards
-            let isArticle = false;
-            let articleTitle = '';
-            let articleUrl = '';
-            const cardWrapper = tweetElement.querySelector('[data-testid="card.wrapper"]');
-            if (cardWrapper) {
-                const cardLink = cardWrapper.querySelector('a[href*="/article"], a[href*="/articles"]');
-                if (cardLink) {
-                    isArticle = true;
-                    articleUrl = cardLink.href || '';
-                }
-                const cardHeadline = cardWrapper.querySelector('[data-testid="card.layoutLarge.detail"] span, [data-testid="card.layoutSmall.detail"] span');
-                if (cardHeadline) {
-                    articleTitle = cardHeadline.innerText || '';
-                    if (!isArticle && articleTitle.length > 0) {
-                        const anyLink = cardWrapper.querySelector('a[role="link"]');
-                        if (anyLink) {
-                            articleUrl = anyLink.href || '';
-                            isArticle = true;
-                        }
-                    }
-                }
-            }
+            const articleInfo = detectArticleContent(tweetElement);
+            const isArticle = articleInfo.isArticle;
+            const articleTitle = articleInfo.articleTitle;
+            const articleUrl = articleInfo.articleUrl;
 
             return {
                 tweetId: finalTweetId,
