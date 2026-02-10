@@ -305,7 +305,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         // Full content
-        elements.detailContent.textContent = bookmark.content;
+        elements.detailContent.innerHTML = '';
+        if (bookmark.isArticle && bookmark.articleTitle) {
+            const titleEl = document.createElement('div');
+            titleEl.className = 'article-detail-title';
+            titleEl.textContent = bookmark.articleTitle;
+            elements.detailContent.appendChild(titleEl);
+        }
+        if (bookmark.isArticle) {
+            const badge = document.createElement('span');
+            badge.className = 'article-badge';
+            badge.textContent = '📄 Article';
+            elements.detailContent.appendChild(badge);
+        }
+        const textNode = document.createElement('p');
+        textNode.style.margin = '8px 0 0';
+        textNode.textContent = bookmark.content;
+        elements.detailContent.appendChild(textNode);
+
+        // Article link
+        if (bookmark.isArticle && bookmark.articleUrl) {
+            const articleLink = document.createElement('a');
+            articleLink.className = 'article-link-btn';
+            articleLink.href = bookmark.articleUrl;
+            articleLink.target = '_blank';
+            articleLink.textContent = '📖 Read Full Article';
+            elements.detailContent.appendChild(articleLink);
+        }
 
         // Media gallery
         if (bookmark.media && bookmark.media.length > 0) {
@@ -546,6 +572,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const mediaHtml = bookmark.media && bookmark.media.length > 0
             ? `<div class="card-media"><img src="${bookmark.media[0].url}" loading="lazy"></div>`
             : '';
+        const articleBadge = bookmark.isArticle
+            ? `<span class="article-badge">📄 Article</span>`
+            : '';
 
         div.innerHTML = `
             <div class="card-header">
@@ -556,8 +585,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="author-handle">@${bookmark.author}</span>
                     </div>
                 </div>
+                ${articleBadge}
             </div>
             <div class="card-content">
+                ${bookmark.isArticle && bookmark.articleTitle ? `<strong class="article-title">${escapeHtml(bookmark.articleTitle)}</strong><br>` : ''}
                 ${escapeHtml(bookmark.content)}
                 ${mediaHtml}
             </div>

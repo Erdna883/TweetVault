@@ -633,6 +633,33 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                     });
                 });
 
+                // Detect Twitter Articles / embedded cards
+                let isArticle = false;
+                let articleTitle = '';
+                let articleUrl = '';
+                const cardWrapper = tweetEl.querySelector('[data-testid="card.wrapper"]');
+                if (cardWrapper) {
+                    // Look for article-style cards
+                    const cardLink = cardWrapper.querySelector('a[href*="/article"], a[href*="/articles"]');
+                    if (cardLink) {
+                        isArticle = true;
+                        articleUrl = cardLink.href || '';
+                    }
+                    // Also detect by card layout text (headline)
+                    const cardHeadline = cardWrapper.querySelector('[data-testid="card.layoutLarge.detail"] span, [data-testid="card.layoutSmall.detail"] span');
+                    if (cardHeadline) {
+                        articleTitle = cardHeadline.innerText || '';
+                        // If we have a headline in a card, it's likely an article or link card
+                        if (!isArticle && articleTitle.length > 0) {
+                            const anyLink = cardWrapper.querySelector('a[role="link"]');
+                            if (anyLink) {
+                                articleUrl = anyLink.href || '';
+                                isArticle = true;
+                            }
+                        }
+                    }
+                }
+
                 if (tweetId) {
                     bookmarks.push({
                         tweetId,
@@ -641,6 +668,9 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                         url,
                         createdAt,
                         media,
+                        isArticle,
+                        articleTitle,
+                        articleUrl,
                         folderId: 'default',
                         tags: [],
                         notes: ''
@@ -1266,6 +1296,30 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 }
             });
 
+            // Detect Twitter Articles / embedded cards
+            let isArticle = false;
+            let articleTitle = '';
+            let articleUrl = '';
+            const cardWrapper = tweetElement.querySelector('[data-testid="card.wrapper"]');
+            if (cardWrapper) {
+                const cardLink = cardWrapper.querySelector('a[href*="/article"], a[href*="/articles"]');
+                if (cardLink) {
+                    isArticle = true;
+                    articleUrl = cardLink.href || '';
+                }
+                const cardHeadline = cardWrapper.querySelector('[data-testid="card.layoutLarge.detail"] span, [data-testid="card.layoutSmall.detail"] span');
+                if (cardHeadline) {
+                    articleTitle = cardHeadline.innerText || '';
+                    if (!isArticle && articleTitle.length > 0) {
+                        const anyLink = cardWrapper.querySelector('a[role="link"]');
+                        if (anyLink) {
+                            articleUrl = anyLink.href || '';
+                            isArticle = true;
+                        }
+                    }
+                }
+            }
+
             return {
                 tweetId: finalTweetId,
                 author,
@@ -1273,6 +1327,9 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 url,
                 createdAt,
                 media,
+                isArticle,
+                articleTitle,
+                articleUrl,
                 tags: [],
                 notes: ''
             };
