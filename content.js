@@ -637,14 +637,22 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 }
 
                 // Strategy 1c: Any link inside the card with a title/text
-                if (!isArticle && cardWrapper.querySelector('a[role="link"]')) {
-                    const cardLinks = cardWrapper.querySelectorAll('a[role="link"]');
+                if (!isArticle) {
+                    const cardLinks = cardWrapper.querySelectorAll('a');
                     for (const link of cardLinks) {
                         const href = link.href || '';
-                        // Skip twitter.com profile links, only capture external or article URLs
-                        if (href && !href.match(/^https?:\/\/(twitter\.com|x\.com)\/?[a-zA-Z0-9_]*\/?$/)) {
+                        // Skip hashtags, mentions, and simple profile links
+                        if (href &&
+                            !href.includes('/hashtag/') &&
+                            !href.match(/^https?:\/\/(twitter\.com|x\.com)\/[a-zA-Z0-9_]+\/?$/)) {
+
                             articleUrl = href;
                             isArticle = true;
+
+                            // Try to get title from link text if we don't have one
+                            if (!articleTitle && link.innerText && link.innerText.trim().length > 5) {
+                                articleTitle = link.innerText.trim();
+                            }
                             break;
                         }
                     }
@@ -756,11 +764,24 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
                 const articleTitle = articleInfo.articleTitle;
                 const articleUrl = articleInfo.articleUrl;
 
+                // Determine final content to save
+                let finalContent = content;
+                if (!finalContent) {
+                    if (isArticle) {
+                        // If it's an article/link card and no user text, use the Article Title
+                        finalContent = articleTitle || '';
+                    } else if (media.length > 0) {
+                        finalContent = '[Media Only]';
+                    } else {
+                        finalContent = '';
+                    }
+                }
+
                 if (tweetId) {
                     bookmarks.push({
                         tweetId,
                         author,
-                        content,
+                        content: finalContent,
                         url,
                         createdAt,
                         media,
@@ -1398,10 +1419,23 @@ if (window.location.hostname.includes('twitter.com') || window.location.hostname
             const articleTitle = articleInfo.articleTitle;
             const articleUrl = articleInfo.articleUrl;
 
+            // Determine final content to save
+            let finalContent = content;
+            if (!finalContent) {
+                if (isArticle) {
+                    // If it's an article/link card and no user text, use the Article Title
+                    finalContent = articleTitle || '';
+                } else if (media.length > 0) {
+                    finalContent = '[Media Only]';
+                } else {
+                    finalContent = ''; // Empty tweet?
+                }
+            }
+
             return {
                 tweetId: finalTweetId,
                 author,
-                content: content || '[Media Only]',
+                content: finalContent,
                 url,
                 createdAt,
                 media,
